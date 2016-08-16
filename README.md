@@ -1,2 +1,6 @@
 # CardapioApp
-Repositório do Projeto Integrado
+
+Bibliotecas Usadas
+  - https://github.com/roughike/BottomBar
+  - https://github.com/daimajia/AndroidViewAnimations
+  - https://github.com/chrisbanes/cheesesquare
