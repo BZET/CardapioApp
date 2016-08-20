@@ -1,14 +1,23 @@
 package br.com.bzet.cardapio;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.CollapsibleActionView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -17,6 +26,7 @@ import java.util.List;
 
 import br.com.bzet.cardapio.adapters.ViewPagerAdapter;
 import br.com.bzet.cardapio.fragment.AperitivosFragment;
+import br.com.bzet.cardapio.fragment.ListaFragment;
 import br.com.bzet.cardapio.modelo.Item;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,8 +37,11 @@ public class MainActivity extends AppCompatActivity {
     private BottomBar mBottomBar;
     private ViewPagerAdapter viewPagerAdapter;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    private CoordinatorLayout coordinatorLayout;
+
 
     private List<Item> listItem; //lista de itens do cardapio
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,12 +61,37 @@ public class MainActivity extends AppCompatActivity {
         mBottomBar.setOnMenuTabClickListener(new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
-                if (menuItemId == R.id.bottomBarItemOne) {
-                    // The user selected item number one.
+                ListaFragment listaFragment = new ListaFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                switch (menuItemId) {
+                    case R.id.bottomBarItemOne:
+                        tabLayout = (TabLayout) findViewById(R.id.tabs);
+                        tabLayout.setupWithViewPager(viewPager);
 
+
+                        viewPager = (ViewPager) findViewById(R.id.viewpager);
+                        setupViewPager(viewPager);
+                        break;
+                    case R.id.bottomBarItemTwo:
+
+                        fragmentTransaction.replace(R.id.viewpager, listaFragment, "mainFrag");
+                        tabLayout.setEnabled(false);
+                        tabLayout.removeAllTabs();
+
+                        fragmentTransaction.commit();
+
+                        break;
+                    case R.id.bottomBarItemThree:
+
+                        break;
+                    case R.id.bottomBarItemFour:
+
+                        break;
                 }
 
-            }@Override
+            }
+
+            @Override
             public void onMenuTabReSelected(@IdRes int menuItemId) {
                 if (menuItemId == R.id.bottomBarItemOne) {
                     // The user reselected item number one, scroll your content to top.
@@ -77,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
 //            }
 
 
-
         //Tabs para a Página de Cardápio
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -85,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+
     }
 
 
@@ -111,30 +149,31 @@ public class MainActivity extends AppCompatActivity {
         mBottomBar.onSaveInstanceState(outState);
     }
 
-    public List<Item> getSetItemList(int qnt){
+    public List<Item> getSetItemList(int qnt) {
 
-        String itemPreco[] = {"R$ 43,50","R$ 43,50","R$ 43,00","R$ 43,50"};
-        String itemNome[] = {"Aussie Cheesse Fries","Billy Ribs","Bloomin Onion","Kooka Burra Wings"};
-        int  itemImagemUrl[] = {R.drawable.outback_aperitivo_aussiecheesefries
-                ,R.drawable.outback_aperitivo_billyribs
-                ,R.drawable.outback_aperitivo_bloominonion
-                ,R.drawable.outback_aperitivo_kookaburrawings};
+        String itemPreco[] = {"R$ 43,50", "R$ 43,50", "R$ 43,00", "R$ 43,50"};
+        String itemNome[] = {"Aussie Cheesse Fries", "Billy Ribs", "Bloomin Onion", "Kooka Burra Wings"};
+        int itemImagemUrl[] = {R.drawable.outback_aperitivo_aussiecheesefries
+                , R.drawable.outback_aperitivo_billyribs
+                , R.drawable.outback_aperitivo_bloominonion
+                , R.drawable.outback_aperitivo_kookaburrawings};
         String itemdescricao[] = {"Nossas tradicionais batatas fritas cobertas com uma combinação de queijos e bacon picado. Servidas com o clássico molho Ranch."
-                ,"Cinco costelas de porco regadas com o delicioso molho Billabong. Servidas com fritas."
-                ,"O verdadeiro sabor do Outback. A gigante cebola dourada, pronta para ser saboreada com nosso maravilhoso molho Bloom."
-                ,"10 sobreasas de frango empanadas com uma mistura de temperos especiais e acompanhadas do molho Blue Cheese e aipo. Explore uma das opções: suave, média ou picante."};
-        String itemTipo[] = {"Apertivo","Apertivo","Apertivo","Apertivo"};
-        Boolean itemAtivo[] = {true,true,true,true};
+                , "Cinco costelas de porco regadas com o delicioso molho Billabong. Servidas com fritas."
+                , "O verdadeiro sabor do Outback. A gigante cebola dourada, pronta para ser saboreada com nosso maravilhoso molho Bloom."
+                , "10 sobreasas de frango empanadas com uma mistura de temperos especiais e acompanhadas do molho Blue Cheese e aipo. Explore uma das opções: suave, média ou picante."};
+        String itemTipo[] = {"Apertivo", "Apertivo", "Apertivo", "Apertivo"};
+        Integer itemAtivo[] = {1, 1, 1, 1};
 
         listItem = new ArrayList<>();
 
-        for(int i=0;i<qnt;i++){
-          Item itemObj = new Item(itemNome[i],itemPreco[i],itemdescricao[i],itemImagemUrl[i],itemTipo[i],itemAtivo[i]);
+        for (int i = 0; i < qnt; i++) {
+            Item itemObj = new Item(itemNome[i], itemPreco[i], itemdescricao[i], itemImagemUrl[i], itemTipo[i], itemAtivo[i]);
             listItem.add(itemObj);
 
         }
         return listItem;
     }
+
 
 
 }

@@ -15,15 +15,26 @@ public class Item implements Parcelable{
     private String descricao;
     private Integer imagemUrl;
     private String tipo;
-    private Boolean ativo;
+    private Integer ativo;
+    private Integer id;
 
-    public Item(String nome, String preco, String descricao, Integer imagemUrl, String tipo, Boolean ativo) {
+    public Item() {
+    };
+
+    public Item(String nome, String preco, String descricao, Integer imagemUrl, String tipo, Integer ativo) {
         this.nome = nome;
         this.preco = preco;
         this.descricao = descricao;
         this.imagemUrl = imagemUrl;
         this.tipo = tipo;
         this.ativo = ativo;
+    }
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -66,11 +77,11 @@ public class Item implements Parcelable{
         this.tipo = tipo;
     }
 
-    public Boolean getAtivo() {
+    public Integer getAtivo() {
         return ativo;
     }
 
-    public void setAtivo(Boolean ativo) {
+    public void setAtivo(Integer ativo) {
         this.ativo = ativo;
     }
 

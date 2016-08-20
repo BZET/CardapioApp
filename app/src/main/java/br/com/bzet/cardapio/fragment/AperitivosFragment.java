@@ -56,7 +56,7 @@ public class AperitivosFragment extends Fragment implements RecyclerViewOnClickL
 
     @Override
     public void onClickListener(View view, int position) {
-        Toast.makeText(getActivity(),"LOG Cliquei " + position,Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getActivity(),"LOG Cliquei " + position,Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getActivity(), ItemActivity.class);
         intent.putExtra("item", itemList.get(position));
         getActivity().startActivity(intent);

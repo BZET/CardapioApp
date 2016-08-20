@@ -35,4 +35,5 @@ android {
 
      // CardView
      compile 'com.android.support:cardview-v7:23.3.+'
-}
+     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+ }
